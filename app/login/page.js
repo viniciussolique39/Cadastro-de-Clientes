@@ -1,45 +1,45 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
-    const router = useRouter();
+  const router = useRouter();
 
-    const [usuario, setUsuario] = useState("");
-    const [senha, SetSenha] = useState("");
-    const [mensagem, SettMensagem] = useState("");
+  const [usuario, setUsuario] = useState("");
+  const [senha, setSenha] = useState("");
+  const [mensagem, setMensagem] = useState("");
 
-    async function entrar(e) {
-        e.preventDefault();
+  async function entrar(e) {
+    e.preventDefault();
 
-        SettMensagem("");
+    setMensagem("");
 
-        const resposta = await fetch("/api/login", {
-            method: "POST", 
-            headers:{
-                "content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                usuario,
-                senha
-            })
+    const resposta = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        usuario,
+        senha
+      })
+    });
 
-        });
+    const dados = await resposta.json();
 
-        const dados = await resposta.json();
-
-        if(!resposta.ok){
-            SettMensagem(dados.erro);
-            return;
-        }
-
-        localStorage.setItem("Usuario", dados.usuario.nome);
-        router.push("/")
+    if (!resposta.ok) {
+      setMensagem(dados.erro);
+      return;
     }
 
-    return(
-       <main>
+    localStorage.setItem("usuario", dados.usuario.nome);
+
+    router.push("/");
+  }
+
+  return (
+    <main>
       <div className="login">
         <h1>Login</h1>
 
@@ -59,7 +59,7 @@ export default function Login() {
           <input
             type="password"
             value={senha}
-            onChange={(e) => SetSenha(e.target.value)}
+            onChange={(e) => setSenha(e.target.value)}
             required
           />
 
@@ -75,6 +75,5 @@ export default function Login() {
 
       </div>
     </main>
-
-    );
+  );
 }
